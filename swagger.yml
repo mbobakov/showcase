@@ -1,12 +1,106 @@
+swagger: "2.0"
 consumes:
-- application/io.goswagger.metrics-app.v1+json
+  - application/io.goswagger.metrics-app.v1+json
+produces:
+  - application/io.goswagger.metrics-app.v1+json
+schemes:
+  - http
 info:
   description: Shows how swagger and Clickhouse works together
   title: A clickhouse-swagger application
   version: 1.0.0
-paths: {}
-produces:
-- application/io.goswagger.metrics-app.v1+json
-schemes:
-- http
-swagger: "2.0"
+basePath: "/v1.0"
+tags:
+  - name: "metrics"
+    description: "Everything about your Metrics"
+    externalDocs:
+      description: "Find out more"
+      url: "http://swagger.io"
+
+paths:
+  /metrics/{metricName}:
+    post:
+      tags:
+        - "metrics"
+      summary: "Save datapoint"
+      description: "Save datapoint"
+      operationId: "postDatapoint"
+      parameters:
+        - name: metricName
+          in: "path"
+          required: true
+          type: string
+          minLength: 1
+
+        - name: "body"
+          in: "body"
+          description: "Dattime range"
+          required: true
+          schema:
+            $ref: "#/definitions/Datapoint"
+      responses:
+        201:
+           description: "Created"
+        500:
+          description: "Server error"
+
+  /metrics:
+    get:
+      tags:
+        - "metrics"
+      summary: "Get metrics for the time range"
+      description: "Get metrics for the time range"
+      operationId: "findMetrics"
+      parameters:
+        - name: "from"
+          in: "query"
+          description: "Start of time range"
+          required: true
+          type: "string"
+          format: "date-time"
+        - name: "to"
+          in: "query"
+          description: "End of time range"
+          required: true
+          type: "string"
+          format: "date-time"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+              properties:
+                datapoints:
+                  type: integer
+        400:
+          description: "Invalid tag value"
+
+definitions:
+  Metric:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        minLength: 1
+      datapoints:
+        type: "array"
+        items:
+          $ref: "#/definitions/Datapoint"
+
+  Datapoint:
+    type: object
+    required:
+      - timestamp_utc
+      - value
+    properties:
+      timestamp_utc:
+        type: integer
+        format: int64
+      value:
+        type: integer
+        format: int64
+        readOnly: false

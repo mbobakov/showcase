@@ -11,3 +11,4 @@ swagger init spec \
   --consumes application/io.goswagger.metrics-app.v1+json \
   --produces application/io.goswagger.metrics-app.v1+json
 ```
+- add operations and models to the spec
