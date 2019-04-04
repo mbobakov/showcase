@@ -1,0 +1,12 @@
+consumes:
+- application/io.goswagger.metrics-app.v1+json
+info:
+  description: Shows how swagger and Clickhouse works together
+  title: A clickhouse-swagger application
+  version: 1.0.0
+paths: {}
+produces:
+- application/io.goswagger.metrics-app.v1+json
+schemes:
+- http
+swagger: "2.0"
