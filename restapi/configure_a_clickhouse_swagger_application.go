@@ -6,9 +6,10 @@ import (
 	"crypto/tls"
 	"net/http"
 
+	"github.com/mbobakov/showcase/service/metric"
+
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
-	middleware "github.com/go-openapi/runtime/middleware"
 
 	"github.com/mbobakov/showcase/restapi/operations"
 	"github.com/mbobakov/showcase/restapi/operations/metrics"
@@ -34,16 +35,10 @@ func configureAPI(api *operations.AClickhouseSwaggerApplicationAPI) http.Handler
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.MetricsFindMetricsHandler == nil {
-		api.MetricsFindMetricsHandler = metrics.FindMetricsHandlerFunc(func(params metrics.FindMetricsParams) middleware.Responder {
-			return middleware.NotImplemented("operation metrics.FindMetrics has not yet been implemented")
-		})
-	}
-	if api.MetricsPostDatapointHandler == nil {
-		api.MetricsPostDatapointHandler = metrics.PostDatapointHandlerFunc(func(params metrics.PostDatapointParams) middleware.Responder {
-			return middleware.NotImplemented("operation metrics.PostDatapoint has not yet been implemented")
-		})
-	}
+	srvc := metric.New(nil)
+
+	api.MetricsFindMetricsHandler = metrics.FindMetricsHandlerFunc(srvc.FindMetrics)
+	api.MetricsPostDatapointHandler = metrics.PostDatapointHandlerFunc(srvc.PostDatapoint)
 
 	api.ServerShutdown = func() {}
 

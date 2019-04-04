@@ -13,3 +13,4 @@ swagger init spec \
 ```
 - add operations and models to the spec
 - run "swagger generate server" (goswagger version is 0.19)
+- write service layer
