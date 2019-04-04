@@ -12,3 +12,4 @@ swagger init spec \
   --produces application/io.goswagger.metrics-app.v1+json
 ```
 - add operations and models to the spec
+- run "swagger generate server" (goswagger version is 0.19)
