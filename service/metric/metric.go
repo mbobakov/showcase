@@ -2,6 +2,8 @@
 package metric
 
 import (
+	"log"
+
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/mbobakov/showcase/restapi/operations/metrics"
 	"github.com/mbobakov/showcase/storage"
@@ -27,6 +29,7 @@ func New(p provider) *Service {
 func (s *Service) FindMetrics(params metrics.FindMetricsParams) middleware.Responder {
 	sum, err := s.prov.Summary()
 	if err != nil {
+		log.Println(err)
 		return metrics.NewFindMetricsBadRequest()
 	}
 
@@ -47,6 +50,7 @@ func (s *Service) PostDatapoint(params metrics.PostDatapointParams) middleware.R
 		},
 	)
 	if err != nil {
+		log.Println(err)
 		return metrics.NewPostDatapointInternalServerError()
 	}
 
